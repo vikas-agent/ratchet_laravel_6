@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\UserCreationEvent;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
@@ -69,15 +70,8 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
-        // This is our new stuff
-        $context = new \ZMQContext();
-        $socket = $context->getSocket(\ZMQ::SOCKET_PUSH, 'my pusher');
-        $socket->connect('tcp://localhost:5555');
-        $dataInArray = $newUser->toArray();
-        $dataInArray['category'] = 'kittensCategory';
 
-        $socket->send(json_encode($dataInArray));
-
+        event(new UserCreationEvent($newUser));
         return $newUser;
     }
 }

@@ -24,7 +24,6 @@ class WebSocketPushController implements WampServerInterface
     public function onSubscribe(ConnectionInterface $conn, $topic)
     {
         $this->subscribedTopics[$topic->getId()] = $topic;
-        dump($this->subscribedTopics);
     }
 
     public function onUnSubscribe(ConnectionInterface $conn, $topic)
